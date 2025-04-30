@@ -188,31 +188,33 @@ export function PortfolioView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h2 className="text-2xl font-bold">Portafolio</h2>
-        <Button onClick={() => setIsAddModalOpen(true)}>
+        <Button onClick={() => setIsAddModalOpen(true)} className="w-full sm:w-auto">
           <Plus className="mr-2 h-4 w-4" /> Añadir Transacción
         </Button>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="h-[100px] rounded-lg bg-muted/60 animate-pulse" />
           ))}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Valor Total</CardDescription>
-                <CardTitle className="text-2xl">{formatCurrency(portfolioValue)}</CardTitle>
+                <CardTitle className="text-xl sm:text-2xl">{formatCurrency(portfolioValue)}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center">
                   <DollarSign className="mr-1 h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{formatCurrency(totalInvested)} invertido</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">
+                    {formatCurrency(totalInvested)} invertido
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -220,7 +222,9 @@ export function PortfolioView() {
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Cambio 24h</CardDescription>
-                <CardTitle className={`text-2xl ${portfolioChange24h >= 0 ? "text-green-500" : "text-red-500"}`}>
+                <CardTitle
+                  className={`text-xl sm:text-2xl ${portfolioChange24h >= 0 ? "text-green-500" : "text-red-500"}`}
+                >
                   {formatCurrency(portfolioChange24h)}
                 </CardTitle>
               </CardHeader>
@@ -231,7 +235,11 @@ export function PortfolioView() {
                   ) : (
                     <ArrowDown className="mr-1 h-4 w-4 text-red-500" />
                   )}
-                  <span className={`text-sm ${portfolioChange24hPercentage >= 0 ? "text-green-500" : "text-red-500"}`}>
+                  <span
+                    className={`text-xs sm:text-sm ${
+                      portfolioChange24hPercentage >= 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
                     {formatPercentage(portfolioChange24hPercentage)}
                   </span>
                 </div>
@@ -241,7 +249,9 @@ export function PortfolioView() {
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Beneficio/Pérdida Total</CardDescription>
-                <CardTitle className={`text-2xl ${portfolioProfitLoss >= 0 ? "text-green-500" : "text-red-500"}`}>
+                <CardTitle
+                  className={`text-xl sm:text-2xl ${portfolioProfitLoss >= 0 ? "text-green-500" : "text-red-500"}`}
+                >
                   {formatCurrency(portfolioProfitLoss)}
                 </CardTitle>
               </CardHeader>
@@ -252,7 +262,11 @@ export function PortfolioView() {
                   ) : (
                     <ArrowDown className="mr-1 h-4 w-4 text-red-500" />
                   )}
-                  <span className={`text-sm ${portfolioProfitLossPercentage >= 0 ? "text-green-500" : "text-red-500"}`}>
+                  <span
+                    className={`text-xs sm:text-sm ${
+                      portfolioProfitLossPercentage >= 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
                     {formatPercentage(portfolioProfitLossPercentage)}
                   </span>
                 </div>
@@ -262,12 +276,12 @@ export function PortfolioView() {
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Número de Activos</CardDescription>
-                <CardTitle className="text-2xl">{holdings.length}</CardTitle>
+                <CardTitle className="text-xl sm:text-2xl">{holdings.length}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center">
                   <LineChart className="mr-1 h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-xs sm:text-sm text-muted-foreground">
                     {holdings.length > 0 ? "Siguiendo rendimiento" : "Añade activos para empezar a seguir"}
                   </span>
                 </div>
@@ -277,77 +291,97 @@ export function PortfolioView() {
 
           {holdings.length > 0 ? (
             <Tabs defaultValue="holdings">
-              <TabsList>
-                <TabsTrigger value="holdings">Tenencias</TabsTrigger>
-                <TabsTrigger value="performance">Rendimiento</TabsTrigger>
-                <TabsTrigger value="allocation">Distribución</TabsTrigger>
+              <TabsList className="w-full sm:w-auto">
+                <TabsTrigger value="holdings" className="flex-1 sm:flex-none">
+                  Tenencias
+                </TabsTrigger>
+                <TabsTrigger value="performance" className="flex-1 sm:flex-none">
+                  Rendimiento
+                </TabsTrigger>
+                <TabsTrigger value="allocation" className="flex-1 sm:flex-none">
+                  Distribución
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="holdings" className="mt-4">
                 <Card>
-                  <CardContent className="p-0">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Activo</TableHead>
-                          <TableHead>Cantidad</TableHead>
-                          <TableHead>Precio Promedio</TableHead>
-                          <TableHead>Precio Actual</TableHead>
-                          <TableHead>Valor Actual</TableHead>
-                          <TableHead>Beneficio/Pérdida</TableHead>
-                          <TableHead></TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {holdings.map((holding) => {
-                          const coin = coins.find((c) => c.id === holding.coinId)
-                          if (!coin) return null
+                  <CardContent className="p-0 overflow-auto">
+                    <div className="w-full overflow-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Activo</TableHead>
+                            <TableHead className="hidden sm:table-cell">Cantidad</TableHead>
+                            <TableHead className="hidden md:table-cell">Precio Promedio</TableHead>
+                            <TableHead className="hidden md:table-cell">Precio Actual</TableHead>
+                            <TableHead>Valor Actual</TableHead>
+                            <TableHead>Beneficio/Pérdida</TableHead>
+                            <TableHead></TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {holdings.map((holding) => {
+                            const coin = coins.find((c) => c.id === holding.coinId)
+                            if (!coin) return null
 
-                          const currentValue = holding.amount * coin.current_price
-                          const profitLoss = currentValue - holding.totalCost
-                          const profitLossPercentage = (profitLoss / holding.totalCost) * 100
+                            const currentValue = holding.amount * coin.current_price
+                            const profitLoss = currentValue - holding.totalCost
+                            const profitLossPercentage = (profitLoss / holding.totalCost) * 100
 
-                          return (
-                            <TableRow key={holding.coinId}>
-                              <TableCell className="font-medium">
-                                <div className="flex items-center">
-                                  <img
-                                    src={coin.image || "/placeholder.svg"}
-                                    alt={coin.name}
-                                    className="mr-2 h-6 w-6 rounded-full"
-                                  />
-                                  <div>
-                                    <div>{coin.name}</div>
-                                    <div className="text-xs text-muted-foreground">{coin.symbol.toUpperCase()}</div>
+                            return (
+                              <TableRow key={holding.coinId}>
+                                <TableCell className="font-medium">
+                                  <div className="flex items-center">
+                                    <div className="relative w-6 h-6 flex-shrink-0 mr-2 overflow-hidden rounded-full">
+                                      <img
+                                        src={coin.image || "/placeholder.svg"}
+                                        alt={coin.name}
+                                        className="h-full w-full object-contain"
+                                        loading="lazy"
+                                        style={{ position: "relative", zIndex: 1 }}
+                                      />
+                                    </div>
+                                    <div>
+                                      <div className="text-xs sm:text-sm">{coin.name}</div>
+                                      <div className="text-xs text-muted-foreground">{coin.symbol.toUpperCase()}</div>
+                                    </div>
                                   </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {holding.amount.toLocaleString(undefined, { maximumFractionDigits: 8 })}
-                              </TableCell>
-                              <TableCell>{formatCurrency(holding.averageCost)}</TableCell>
-                              <TableCell>{formatCurrency(coin.current_price)}</TableCell>
-                              <TableCell>{formatCurrency(currentValue)}</TableCell>
-                              <TableCell>
-                                <div className={profitLoss >= 0 ? "text-green-500" : "text-red-500"}>
-                                  {formatCurrency(profitLoss)}
-                                  <div className="text-xs">{formatPercentage(profitLossPercentage)}</div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => removeHolding(holding.coinId)}
-                                  title="Eliminar tenencia"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        })}
-                      </TableBody>
-                    </Table>
+                                </TableCell>
+                                <TableCell className="hidden sm:table-cell text-xs sm:text-sm">
+                                  {holding.amount.toLocaleString(undefined, { maximumFractionDigits: 8 })}
+                                </TableCell>
+                                <TableCell className="hidden md:table-cell text-xs sm:text-sm">
+                                  {formatCurrency(holding.averageCost)}
+                                </TableCell>
+                                <TableCell className="hidden md:table-cell text-xs sm:text-sm">
+                                  {formatCurrency(coin.current_price)}
+                                </TableCell>
+                                <TableCell className="text-xs sm:text-sm">{formatCurrency(currentValue)}</TableCell>
+                                <TableCell>
+                                  <div
+                                    className={`text-xs sm:text-sm ${
+                                      profitLoss >= 0 ? "text-green-500" : "text-red-500"
+                                    }`}
+                                  >
+                                    {formatCurrency(profitLoss)}
+                                    <div className="text-xs">{formatPercentage(profitLossPercentage)}</div>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => removeHolding(holding.coinId)}
+                                    title="Eliminar tenencia"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            )
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -358,7 +392,7 @@ export function PortfolioView() {
                     <CardDescription>Sigue el valor de tu portafolio a lo largo del tiempo</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-[400px]">
+                    <div className="h-[300px] sm:h-[400px]">
                       <PortfolioChart holdings={holdings} coins={coins} />
                     </div>
                   </CardContent>

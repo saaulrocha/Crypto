@@ -5,7 +5,6 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function ThemeToggle() {
   const { setTheme, theme, resolvedTheme } = useTheme()
@@ -29,26 +28,18 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark"
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          {isDark ? <Moon className="h-[1.2rem] w-[1.2rem]" /> : <Sun className="h-[1.2rem] w-[1.2rem]" />}
-          <span className="sr-only">Cambiar tema</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          <Sun className="mr-2 h-4 w-4" />
-          <span>Claro</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <Moon className="mr-2 h-4 w-4" />
-          <span>Oscuro</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          <span>Sistema</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="rounded-full bg-background hover:bg-accent hover:text-accent-foreground"
+    >
+      {isDark ? (
+        <Moon className="h-[1.2rem] w-[1.2rem] text-blue-400" />
+      ) : (
+        <Sun className="h-[1.2rem] w-[1.2rem] text-amber-500" />
+      )}
+      <span className="sr-only">Cambiar tema</span>
+    </Button>
   )
 }
